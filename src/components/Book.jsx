@@ -12,8 +12,8 @@ export default class Book extends Component {
       title: '',
       author: '',
       coverPhotoUrl: '',
-      isbnNumber: ''
-      
+      isbnNumber: '',
+      price: ''
     }
     this.bookInfoChange = this.bookInfoChange.bind(this);
     this.submitBook = this.submitBook.bind(this);
