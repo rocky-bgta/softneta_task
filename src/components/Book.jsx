@@ -1,22 +1,28 @@
 import {Component} from 'react';
 import {Button, Card, Col, Form} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSave, faPlusSquare} from '@fortawesome/free-solid-svg-icons';
+import {faSave, faPlusSquare, faUndo} from '@fortawesome/free-solid-svg-icons';
 
 
 export default class Book extends Component {
   
   constructor(props) {
     super(props);
-    this.state = {
-      title: '',
-      author: '',
-      coverPhotoUrl: '',
-      isbnNumber: '',
-      price: ''
-    }
+    this.state = this.initialState;
     this.bookInfoChange = this.bookInfoChange.bind(this);
     this.submitBook = this.submitBook.bind(this);
+  }
+  
+  initialState = {
+    title: '',
+    author: '',
+    coverPhotoUrl: '',
+    isbnNumber: '',
+    price: ''
+  }
+  
+  resetBook = () => {
+    this.setState(()=> this.initialState )
   }
   
   submitBook(event) {
@@ -36,10 +42,13 @@ export default class Book extends Component {
   
   
   render() {
+    
+    const {title, author, coverPhotoUrl, isbnNumber, price} = this.state;
+    
     return (
        <Card className={'border border-dark bg-dark text-white'}>
          <Card.Header><FontAwesomeIcon icon={faPlusSquare} /> Add New Book</Card.Header>
-         <Form onSubmit={this.submitBook} id="bookFormId">
+         <Form onReset={this.resetBook} onSubmit={this.submitBook} id="bookFormId">
            <Card.Body>
              <Form.Row>
                <Form.Group as={Col}>
@@ -47,7 +56,8 @@ export default class Book extends Component {
                  <Form.Control
                     type="text"
                     name="title"
-                    value={this.state.title}
+                    autoComplete="off"
+                    value={title}
                     onChange={this.bookInfoChange}
                     required
                     className={'bg-dark text-white'}
@@ -58,7 +68,8 @@ export default class Book extends Component {
                  <Form.Control
                     type="text"
                     name="author"
-                    value={this.state.author}
+                    autoComplete="off"
+                    value={author}
                     required
                     onChange={this.bookInfoChange}
                     className={'bg-dark text-white'}
@@ -71,7 +82,8 @@ export default class Book extends Component {
                  <Form.Control
                     type="text"
                     name="coverPhotoUrl"
-                    value={this.state.coverPhotoUrl}
+                    autoComplete="off"
+                    value={coverPhotoUrl}
                     onChange={this.bookInfoChange}
                     required
                     className={'bg-dark text-white'}
@@ -82,7 +94,8 @@ export default class Book extends Component {
                  <Form.Control
                     type="text"
                     name="isbnNumber"
-                    value={this.state.isbnNumber}
+                    autoComplete="off"
+                    value={isbnNumber}
                     onChange={this.bookInfoChange}
                     required
                     className={'bg-dark text-white'}
@@ -93,6 +106,9 @@ export default class Book extends Component {
            <Card.Footer style={{"textAlign":"right"}}>
              <Button size={'sm'} variant="success" type="submit">
                <FontAwesomeIcon icon={faSave} /> Submit
+             </Button>{' '}
+             <Button size={'sm'} variant="info" type="reset">
+               <FontAwesomeIcon icon={faUndo} /> Reset
              </Button>
            </Card.Footer>
          </Form>
