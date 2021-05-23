@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import {Component} from 'react';
 
-class BookList extends Component {
+export default class BookList extends Component {
   render() {
     return (
        <div className="text-white">
@@ -9,5 +9,3 @@ class BookList extends Component {
     );
   }
 }
-
-export default BookList;

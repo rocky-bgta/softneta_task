@@ -1,9 +1,8 @@
-import React from 'react';
+import {Component} from 'react';
 import {Nav, Navbar} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 
-class NavigationBar extends React.Component {
-  
+export default class NavigationBar extends Component {
   render() {
     return (
        <Navbar bg="dark" variant="dark">
@@ -21,5 +20,3 @@ class NavigationBar extends React.Component {
     );
   }
 }
-
-export default NavigationBar;
