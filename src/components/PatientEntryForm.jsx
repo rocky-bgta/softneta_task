@@ -197,13 +197,13 @@ export default class PatientEntryForm extends Component {
                               <td>
                                 <Form.Control
                                    type="date"
-                                   name="updateTime"
+                                   name="date"
                                    autoComplete="off"
-                                   value={study.updateTime}
+                                   value={study.date}
                                    onChange={e => this.handleInputStudyChange(e, index)}
                                    required
                                    className={'bg-dark text-white'}
-                                   placeholder="Enter Study updateTime"/>
+                                   placeholder="Enter Study date"/>
                               </td>
                               <td>
                                 <ButtonGroup>
