@@ -1,34 +1,29 @@
 import {Component} from 'react';
 import {Button, ButtonGroup, Card, Col, Form, Table} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSave, faPlusSquare, faUndo, faEdit, faTrash, faList} from '@fortawesome/free-solid-svg-icons';
+import {faSave, faPlusSquare, faUndo, faPlus, faMinus, faList} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Notification from './Notification';
 
-
-export default class Book extends Component {
+export default class PatientEntryForm extends Component {
   
   constructor(props) {
     super(props);
     this.state = this.initialState;
     this.state.show = false;
-    this.bookInfoChange = this.bookInfoChange.bind(this);
-    this.submitBook = this.submitBook.bind(this);
+    //this.bookInfoChange = this.bookInfoChange.bind(this);
+    //this.submitBook = this.submitBook.bind(this);
   }
   
-  
-  
   initialState = {
-    title: '',
-    author: '',
-    coverPhotoUrl: '',
-    isbnNumber: '',
-    price: '',
+    personCode: '',
+    firstName: '',
+    lastName: '',
+    dob: '',
     studyList: [{
       name: '',
       description: '',
-      creationTime: '',
-      updateTime: ''
+      date: '',
     }]
   }
   resetBook = () => {
@@ -37,18 +32,18 @@ export default class Book extends Component {
   
   submitBook = event => {
     event.preventDefault();
-    const book = {
-      title: this.state.title,
-      author: this.state.author,
-      coverPhotoUrl: this.state.coverPhotoUrl,
-      isbnNumber: this.state.isbnNumber,
+    const patientStudyModel = {
+      personCode: this.state.personCode,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      dob: this.state.dob,
       studyList: this.state.studyList
     };
     
-    console.log("Data: "+ JSON.stringify(book));
+    console.log("Data: "+ JSON.stringify(patientStudyModel));
     
     
-    axios.post("",book)
+    axios.post("",patientStudyModel)
        .then(response=>{
          if(response.data !=null){
             this.setState({"show":true})
@@ -61,12 +56,11 @@ export default class Book extends Component {
   };
   
   addStudy =()=>{
-    let studyList = [];
+    let studyList;
     const newStudy = {
       name: '',
       description: '',
-      creationTime: '',
-      updateTime: ''
+      date:''
     }
     studyList = this.state.studyList;
     studyList.push(newStudy);
@@ -76,32 +70,30 @@ export default class Book extends Component {
   }
   
   removeStudy =(index)=>{
-    let studyList = [];
+    let studyList = [...this.state.studyList];
     studyList = this.state.studyList;
     if(studyList.length!=1) {
-      studyList = studyList.splice(1, index)
-      this.setState({studyList: studyList})
+      studyList.splice(index,1);
+      this.setState({ studyList });
     }
-    console.log(studyList);
   }
   
-  bookInfoChange = event => {
+  handlePatientInfoChange = event => {
     this.setState({
       [event.target.name]: event.target.value
     });
   };
   
-  // handle input change
   handleInputStudyChange = (event, index) => {
     const { name, value } = event.target;
-    const list = [...this.state.studyList];
-    list[index][name] = value;
-    this.setState(list);
+    const studyList = [...this.state.studyList];
+    studyList[index][name] = value;
+    this.setState(studyList);
   };
   
   render() {
     
-    const {title, author, coverPhotoUrl, isbnNumber, price} = this.state;
+    const {personCode, firstName, lastName, dob} = this.state;
     
     return (
        
@@ -111,59 +103,57 @@ export default class Book extends Component {
          </div>
          
          <Card className={'border border-dark bg-dark text-white'}>
-           <Card.Header><FontAwesomeIcon icon={faPlusSquare} /> Add New Book</Card.Header>
+           <Card.Header>Add New Patient info</Card.Header>
            <Form onReset={this.resetBook} onSubmit={this.submitBook} id="bookFormId">
              <Card.Body>
                <Form.Row>
                  <Form.Group as={Col}>
-                   <Form.Label>Title</Form.Label>
+                   <Form.Label>Person</Form.Label>
                    <Form.Control
                       type="text"
-                      name="title"
+                      name="personCode"
                       autoComplete="off"
-                      value={title}
-                      onChange={this.bookInfoChange}
+                      value={personCode}
+                      onChange={this.handlePatientInfoChange}
                       required
                       className={'bg-dark text-white'}
-                      placeholder="Enter Book Title"/>
+                      placeholder="Enter Person Code"/>
                  </Form.Group>
                  <Form.Group as={Col}>
-                   <Form.Label>Author</Form.Label>
+                   <Form.Label>First Name</Form.Label>
                    <Form.Control
                       type="text"
-                      name="author"
+                      name="firstName"
                       autoComplete="off"
-                      value={author}
+                      value={firstName}
                       required
-                      onChange={this.bookInfoChange}
+                      onChange={this.handlePatientInfoChange}
                       className={'bg-dark text-white'}
                       placeholder="Enter Author Name"/>
                  </Form.Group>
-               </Form.Row>
-               <Form.Row>
                  <Form.Group as={Col}>
-                   <Form.Label>Cover Photo URL</Form.Label>
+                   <Form.Label>Last Name</Form.Label>
                    <Form.Control
                       type="text"
-                      name="coverPhotoUrl"
+                      name="lastName"
                       autoComplete="off"
-                      value={coverPhotoUrl}
-                      onChange={this.bookInfoChange}
+                      value={lastName}
+                      onChange={this.handlePatientInfoChange}
                       required
                       className={'bg-dark text-white'}
-                      placeholder="Enter Book Cover Photo URL"/>
+                      placeholder="Enter Last Name"/>
                  </Form.Group>
                  <Form.Group as={Col}>
-                   <Form.Label>ISBN Number</Form.Label>
+                   <Form.Label>Date of Birth</Form.Label>
                    <Form.Control
-                      type="text"
-                      name="isbnNumber"
+                      type="date"
+                      name="dob"
                       autoComplete="off"
-                      value={isbnNumber}
-                      onChange={this.bookInfoChange}
+                      value={dob}
+                      onChange={this.handlePatientInfoChange}
                       required
                       className={'bg-dark text-white'}
-                      placeholder="Enter Book ISBN Number"/>
+                      placeholder="Enter Patient DOB"/>
                  </Form.Group>
                </Form.Row>
                {
@@ -218,11 +208,11 @@ export default class Book extends Component {
                               <td>
                                 <ButtonGroup>
                                   <Button size={'sm'} variant={'outline-primary'} onClick={this.addStudy} style={{margin: 6}}>
-                                    <FontAwesomeIcon icon={faSave}/>
+                                    <FontAwesomeIcon icon={faPlus}/>
                                     </Button>
                                   
                                   <Button size={'sm'} variant={'outline-danger'} onClick={()=>this.removeStudy(index)} style={{margin: 6}}>
-                                    <FontAwesomeIcon icon={faUndo}/>
+                                    <FontAwesomeIcon icon={faMinus}/>
                                   </Button>
                                 </ButtonGroup>
                               </td>
@@ -243,9 +233,6 @@ export default class Book extends Component {
                <Button size={'sm'} variant="info" type="reset">
                  <FontAwesomeIcon icon={faUndo}/> Reset
                </Button>
-               <Button size={'sm'} variant="success" onClick={this.addStudy} type="button">
-                 <FontAwesomeIcon icon={faSave}/> Add
-               </Button>{' '}
              </Card.Footer>
            </Form>
          </Card>

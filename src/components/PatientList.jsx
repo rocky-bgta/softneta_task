@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faEdit, faTrash,faList} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
-export default class BookList extends Component {
+export default class PatientList extends Component {
   constructor(props) {
     super(props);
     this.state = {
