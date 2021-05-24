@@ -1,7 +1,7 @@
 import {Component} from 'react';
-import {Button, ButtonGroup, Card, Col, Form} from 'react-bootstrap';
+import {Button, ButtonGroup, Card, Col, Form, Table} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSave, faPlusSquare, faUndo, faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {faSave, faPlusSquare, faUndo, faEdit, faTrash, faList} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Notification from './Notification';
 
@@ -67,13 +67,22 @@ export default class Book extends Component {
       creationTime: '',
       updateTime: ''
     }
-    studyList = this.state. studyList;
+    studyList = this.state.studyList;
     studyList.push(newStudy);
     
     this.setState({studyList: studyList})
     console.log(studyList);
   }
   
+  removeStudy =(index)=>{
+    let studyList = [];
+    studyList = this.state.studyList;
+    if(studyList.length!=1) {
+      studyList = studyList.splice(1, index)
+      this.setState({studyList: studyList})
+    }
+    console.log(studyList);
+  }
   
   bookInfoChange = event => {
     this.setState({
@@ -150,19 +159,73 @@ export default class Book extends Component {
                  </Form.Group>
                </Form.Row>
                {
-                 this.state.studyList.map((study,index) => (
-                   
-                    <Form.Control
-                       type="text"
-                       name="isbnNumber"
-                       autoComplete="off"
-                       value={index}
-                       onChange={this.bookInfoChange}
-                       required
-                       className={'bg-dark text-white'}
-                       placeholder="Enter Book ISBN Number"/>
-                   
-                 ))
+                 <Card className={'border border-dark bg-dark text-white'}>
+                   <Card.Header> <FontAwesomeIcon icon={faList}/> Study info</Card.Header>
+                   <Card.Body>
+                     <Table striped bordered hover variant="dark">
+                       <thead>
+                       <tr>
+                         <th>Name</th>
+                         <th>Description</th>
+                         <th>Date</th>
+                         <th>Action</th>
+                       </tr>
+                       </thead>
+                       <tbody>
+                       {
+                         this.state.studyList.map((study,index) => (
+                            <tr key={index}>
+                              <td>
+                                <Form.Control
+                                   type="text"
+                                   name="name"
+                                   autoComplete="off"
+                                   value={study.name}
+                                   onChange={this.bookInfoChange}
+                                   required
+                                   className={'bg-dark text-white'}
+                                   placeholder="Enter Study Name"/>
+                              </td>
+                              <td>
+                                <Form.Control
+                                 type="text"
+                                 name="description"
+                                 autoComplete="off"
+                                 value={study.description}
+                                 onChange={this.bookInfoChange}
+                                 required
+                                 className={'bg-dark text-white'}
+                                 placeholder="Enter Study Description"/></td>
+                              <td>
+                                <Form.Control
+                                   type="dateTime"
+                                   name="updateTime"
+                                   autoComplete="off"
+                                   value={study.updateTime}
+                                   onChange={this.bookInfoChange}
+                                   required
+                                   className={'bg-dark text-white'}
+                                   placeholder="Enter Study updateTime"/>
+                              </td>
+                              <td>
+                                <ButtonGroup>
+                                  <Button size={'sm'} variant={'outline-primary'} onClick={this.addStudy} style={{margin: 6}}>
+                                    <FontAwesomeIcon icon={faSave}/>
+                                    </Button>
+                                  
+                                  <Button size={'sm'} variant={'outline-danger'} onClick={()=>this.removeStudy(index)} style={{margin: 6}}>
+                                    <FontAwesomeIcon icon={faUndo}/>
+                                  </Button>
+                                </ButtonGroup>
+                              </td>
+                            </tr>
+                         ))
+                       }
+                       </tbody>
+                     </Table>
+                   </Card.Body>
+                 </Card>
+    
                }
              </Card.Body>
              <Card.Footer style={{'textAlign': 'right'}}>
