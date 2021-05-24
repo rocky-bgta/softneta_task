@@ -25,7 +25,6 @@ export default class Book extends Component {
     isbnNumber: '',
     price: '',
     studyList: [{
-      key: '',
       name: '',
       description: '',
       creationTime: '',
@@ -43,8 +42,11 @@ export default class Book extends Component {
       author: this.state.author,
       coverPhotoUrl: this.state.coverPhotoUrl,
       isbnNumber: this.state.isbnNumber,
-      price: this.state.price
+      studyList: this.state.studyList
     };
+    
+    console.log("Data: "+ JSON.stringify(book));
+    
     
     axios.post("",book)
        .then(response=>{
@@ -61,7 +63,6 @@ export default class Book extends Component {
   addStudy =()=>{
     let studyList = [];
     const newStudy = {
-      key: '',
       name: '',
       description: '',
       creationTime: '',
@@ -90,6 +91,13 @@ export default class Book extends Component {
     });
   };
   
+  // handle input change
+  handleInputStudyChange = (event, index) => {
+    const { name, value } = event.target;
+    const list = [...this.state.studyList];
+    list[index][name] = value;
+    this.setState(list);
+  };
   
   render() {
     
@@ -181,7 +189,7 @@ export default class Book extends Component {
                                    name="name"
                                    autoComplete="off"
                                    value={study.name}
-                                   onChange={this.bookInfoChange}
+                                   onChange={e => this.handleInputStudyChange(e, index)}
                                    required
                                    className={'bg-dark text-white'}
                                    placeholder="Enter Study Name"/>
@@ -192,17 +200,17 @@ export default class Book extends Component {
                                  name="description"
                                  autoComplete="off"
                                  value={study.description}
-                                 onChange={this.bookInfoChange}
+                                 onChange={e => this.handleInputStudyChange(e, index)}
                                  required
                                  className={'bg-dark text-white'}
                                  placeholder="Enter Study Description"/></td>
                               <td>
                                 <Form.Control
-                                   type="dateTime"
+                                   type="date"
                                    name="updateTime"
                                    autoComplete="off"
                                    value={study.updateTime}
-                                   onChange={this.bookInfoChange}
+                                   onChange={e => this.handleInputStudyChange(e, index)}
                                    required
                                    className={'bg-dark text-white'}
                                    placeholder="Enter Study updateTime"/>
