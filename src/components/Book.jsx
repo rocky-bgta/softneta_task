@@ -1,7 +1,7 @@
 import {Component} from 'react';
-import {Button, Card, Col, Form} from 'react-bootstrap';
+import {Button, ButtonGroup, Card, Col, Form} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSave, faPlusSquare, faUndo} from '@fortawesome/free-solid-svg-icons';
+import {faSave, faPlusSquare, faUndo, faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Notification from './Notification';
 
@@ -16,14 +16,22 @@ export default class Book extends Component {
     this.submitBook = this.submitBook.bind(this);
   }
   
+  
+  
   initialState = {
     title: '',
     author: '',
     coverPhotoUrl: '',
     isbnNumber: '',
-    price: ''
+    price: '',
+    studyList: [{
+      key: '',
+      name: '',
+      description: '',
+      creationTime: '',
+      updateTime: ''
+    }]
   }
-  
   resetBook = () => {
     this.setState(()=> this.initialState )
   }
@@ -50,6 +58,21 @@ export default class Book extends Component {
     this.setState(()=>this.initialState);
   };
   
+  addStudy =()=>{
+    let studyList = [];
+    const newStudy = {
+      key: '',
+      name: '',
+      description: '',
+      creationTime: '',
+      updateTime: ''
+    }
+    studyList = this.state. studyList;
+    studyList.push(newStudy);
+    
+    this.setState({studyList: studyList})
+    console.log(studyList);
+  }
   
   
   bookInfoChange = event => {
@@ -126,14 +149,32 @@ export default class Book extends Component {
                       placeholder="Enter Book ISBN Number"/>
                  </Form.Group>
                </Form.Row>
+               {
+                 this.state.studyList.map((study,index) => (
+                   
+                    <Form.Control
+                       type="text"
+                       name="isbnNumber"
+                       autoComplete="off"
+                       value={index}
+                       onChange={this.bookInfoChange}
+                       required
+                       className={'bg-dark text-white'}
+                       placeholder="Enter Book ISBN Number"/>
+                   
+                 ))
+               }
              </Card.Body>
-             <Card.Footer style={{"textAlign":"right"}}>
+             <Card.Footer style={{'textAlign': 'right'}}>
                <Button size={'sm'} variant="success" type="submit">
-                 <FontAwesomeIcon icon={faSave} /> Submit
+                 <FontAwesomeIcon icon={faSave}/> Submit
                </Button>{' '}
                <Button size={'sm'} variant="info" type="reset">
-                 <FontAwesomeIcon icon={faUndo} /> Reset
+                 <FontAwesomeIcon icon={faUndo}/> Reset
                </Button>
+               <Button size={'sm'} variant="success" onClick={this.addStudy} type="button">
+                 <FontAwesomeIcon icon={faSave}/> Add
+               </Button>{' '}
              </Card.Footer>
            </Form>
          </Card>
