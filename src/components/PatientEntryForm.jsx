@@ -111,7 +111,7 @@ export default class PatientEntryForm extends Component {
                    <Form.Label>Person</Form.Label>
                    <Form.Control
                       type="text"
-                      maxlength="30"
+                      maxLength="30"
                       name="personCode"
                       autoComplete="off"
                       value={personCode}
@@ -191,7 +191,7 @@ export default class PatientEntryForm extends Component {
                                 <Form.Control
                                  as="textarea"
                                  rows={2}
-                                 maxlength={200}
+                                 maxLength={200}
                                  name="description"
                                  autoComplete="off"
                                  value={study.description}
