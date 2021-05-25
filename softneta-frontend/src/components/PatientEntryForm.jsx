@@ -12,8 +12,8 @@ export default class PatientEntryForm extends Component {
     super(props);
     this.state = this.initialState;
     this.state.show = false;
-    //this.bookInfoChange = this.bookInfoChange.bind(this);
-    //this.submitBook = this.submitBook.bind(this);
+    this.handlePatientInfoChange = this.handlePatientInfoChange.bind(this);
+    this.submitPatientInfo = this.submitPatientInfo.bind(this);
   }
   
   
@@ -28,17 +28,17 @@ export default class PatientEntryForm extends Component {
       date: new Date(),
     }]
   }
-  resetBook = () => {
+  resetPatientInfo = () => {
     let studyList = [{
       name: '',
       description: '',
       date: new Date(),
     }]
     this.initialState.studyList = studyList;
-    this.setState(()=> this.initialState )
+    this.setState(this.initialState)
   }
   
-  submitBook = event => {
+  submitPatientInfo = event => {
     event.preventDefault();
     const patientStudyModel = {
       personCode: this.state.personCode,
@@ -59,7 +59,7 @@ export default class PatientEntryForm extends Component {
            this.setState({"show":false})
          }
        })
-    this.setState(()=>this.initialState);
+    this.resetPatientInfo();
   };
   
   addStudy =()=>{
@@ -112,12 +112,12 @@ export default class PatientEntryForm extends Component {
        
        <div>
          <div style={{"display":this.state.show ? "block": "none"}}>
-           <Notification children={{show: this.state.show, message:"Book Save Successfully"}}/>
+           <Notification children={{show: this.state.show, message:"PatientInfo Save Successfully"}}/>
          </div>
          
          <Card className={'border border-dark bg-dark text-white'}>
            <Card.Header>Add New Patient info</Card.Header>
-           <Form onReset={this.resetBook} onSubmit={this.submitBook} id="bookFormId">
+           <Form onReset={this.resetPatientInfo} onSubmit={this.submitPatientInfo} id="patientInfoFormId">
              <Card.Body>
                <Form.Row>
                  <Form.Group as={Col}>
