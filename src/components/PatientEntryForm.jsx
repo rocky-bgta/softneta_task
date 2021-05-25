@@ -16,6 +16,7 @@ export default class PatientEntryForm extends Component {
     //this.submitBook = this.submitBook.bind(this);
   }
   
+  
   initialState = {
     personCode: '',
     firstName: '',
@@ -28,6 +29,12 @@ export default class PatientEntryForm extends Component {
     }]
   }
   resetBook = () => {
+    let studyList = [{
+      name: '',
+      description: '',
+      date: new Date(),
+    }]
+    this.initialState.studyList = studyList;
     this.setState(()=> this.initialState )
   }
   
@@ -61,7 +68,7 @@ export default class PatientEntryForm extends Component {
     const newStudy = {
       name: '',
       description: '',
-      date:''
+      date: new Date()
     }
     studyList = this.state.studyList;
     studyList.push(newStudy);
@@ -72,7 +79,6 @@ export default class PatientEntryForm extends Component {
   
   removeStudy =(index)=>{
     let studyList = [...this.state.studyList];
-    studyList = this.state.studyList;
     if(studyList.length!=1) {
       studyList.splice(index,1);
       this.setState({ studyList });
@@ -214,6 +220,7 @@ export default class PatientEntryForm extends Component {
                                 {/*/>*/}
   
                                 <DateTimePicker
+                                   required
                                    onChange={e => this.handleDateChange(e, index)}
                                    value={study.date}
                                 />
