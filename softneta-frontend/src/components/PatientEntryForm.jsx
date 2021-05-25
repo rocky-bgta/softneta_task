@@ -3,15 +3,15 @@ import {Button, ButtonGroup, Card, Col, Form, Table} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSave, faPlusSquare, faUndo, faPlus, faMinus, faList} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import Notification from './Notification';
 import DateTimePicker from 'react-datetime-picker';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class PatientEntryForm extends Component {
   
   constructor(props) {
     super(props);
     this.state = this.initialState;
-    this.state.show = false;
     this.handlePatientInfoChange = this.handlePatientInfoChange.bind(this);
     this.submitPatientInfo = this.submitPatientInfo.bind(this);
   }
@@ -38,6 +38,10 @@ export default class PatientEntryForm extends Component {
     this.setState(this.initialState)
   }
   
+  successNotify = (message) => toast.success(message);
+  errorNotify = (message) => toast.error(message);
+  
+  
   submitPatientInfo = event => {
     event.preventDefault();
     const patientStudyModel = {
@@ -53,10 +57,9 @@ export default class PatientEntryForm extends Component {
     axios.post("http://localhost:3000/api/patient-info/create",patientStudyModel)
        .then(response=>{
          if(response.data !=null){
-            this.setState({"show":true})
-            setTimeout(()=>this.setState({"show":false}),3000);
+           this.successNotify("Patient Information save successfully");
          }else {
-           this.setState({"show":false})
+           this.errorNotify("Failed to save patient");
          }
        })
     this.resetPatientInfo();
@@ -111,9 +114,12 @@ export default class PatientEntryForm extends Component {
     return (
        
        <div>
-         <div style={{"display":this.state.show ? "block": "none"}}>
-           <Notification children={{show: this.state.show, message:"PatientInfo Save Successfully"}}/>
-         </div>
+  
+         <ToastContainer autoClose={3000} />
+         
+         {/*<div style={{"display":this.state.show ? "block": "none"}}>*/}
+         {/*  <Notification children={{show: this.state.show, message:"PatientInfo Save Successfully"}}/>*/}
+         {/*</div>*/}
          
          <Card className={'border border-dark bg-dark text-white'}>
            <Card.Header>Add New Patient info</Card.Header>
