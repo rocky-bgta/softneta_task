@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSave, faPlusSquare, faUndo, faPlus, faMinus, faList} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Notification from './Notification';
+import DateTimePicker from 'react-datetime-picker';
 
 export default class PatientEntryForm extends Component {
   
@@ -23,7 +24,7 @@ export default class PatientEntryForm extends Component {
     studyList: [{
       name: '',
       description: '',
-      date: '',
+      date: new Date(),
     }]
   }
   resetBook = () => {
@@ -83,6 +84,13 @@ export default class PatientEntryForm extends Component {
       [event.target.name]: event.target.value
     });
   };
+  
+  handleDateChange(date, index){
+    console.log(index);
+    const studyList = [...this.state.studyList];
+    studyList[index]['date'] = date;
+    this.setState(studyList);
+  }
   
   handleInputStudyChange = (event, index) => {
     const { name, value } = event.target;
@@ -200,15 +208,25 @@ export default class PatientEntryForm extends Component {
                                  className={'bg-dark text-white'}
                                  placeholder="Enter Study Description"/></td>
                               <td>
-                                <Form.Control
-                                   type="date"
-                                   name="date"
-                                   autoComplete="off"
+                                {/*<DateTimePicker*/}
+                                {/*   onChange={(dob)=> this.handleDateChange(dob)}*/}
+                                {/*   value={dob}*/}
+                                {/*/>*/}
+  
+                                <DateTimePicker
+                                   onChange={e => this.handleDateChange(e, index)}
                                    value={study.date}
-                                   onChange={e => this.handleInputStudyChange(e, index)}
-                                   required
-                                   className={'bg-dark text-white'}
-                                   placeholder="Enter Study date"/>
+                                />
+                                
+                                {/*<Form.Control*/}
+                                {/*   type="date"*/}
+                                {/*   name="date"*/}
+                                {/*   autoComplete="off"*/}
+                                {/*   value={study.date}*/}
+                                {/*   onChange={e => this.handleInputStudyChange(e, index)}*/}
+                                {/*   required*/}
+                                {/*   className={'bg-dark text-white'}*/}
+                                {/*   placeholder="Enter Study date"/>*/}
                               </td>
                               <td>
                                 <ButtonGroup>
