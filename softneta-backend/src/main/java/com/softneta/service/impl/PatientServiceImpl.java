@@ -13,12 +13,10 @@ package com.softneta.service.impl;
 import com.softneta.constant.MessageConstant;
 import com.softneta.core.ResponseObject;
 import com.softneta.entities.PatientEntity;
-import com.softneta.entities.StudyEntity;
 import com.softneta.repository.PersonRepository;
 import com.softneta.service.PatientService;
 import com.softneta.utilities.UtilityMethods;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -40,22 +38,15 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public ResponseObject createPatient(PatientEntity patientEntity) {
-        boolean isPeripheralValid;
         ResponseObject responseObject;
         try {
-            isPeripheralValid = this.isPeripheralCrossBoundary(patientEntity);
-            if (!isPeripheralValid) {
                 patientEntity = this.personRepository.save(patientEntity);
                 responseObject = UtilityMethods.buildResponseObject(patientEntity,
                         MessageConstant.SUCCESSFULLY_CREATED,
                         HttpStatus.OK);
-            } else {
-                responseObject = UtilityMethods.buildResponseObject(patientEntity,
-                        "",
-                        HttpStatus.BAD_REQUEST);
-            }
+                
         } catch (Exception ex) {
-            log.error("createGateWay method got exception ->", ex);
+            log.error("createPatient method got exception ->", ex);
             responseObject = UtilityMethods.buildResponseObject(null,
                     MessageConstant.FAILED_TO_CREATE,
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -66,21 +57,12 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public ResponseObject updatePatient(PatientEntity patientEntity) {
         PatientEntity updatedPatientEntity;
-        boolean isPeripheralValid;
         ResponseObject responseObject;
         try {
-            isPeripheralValid = this.isPeripheralCrossBoundary(patientEntity);
-            if (!isPeripheralValid) {
                 updatedPatientEntity = this.personRepository.save(patientEntity);
                 responseObject = UtilityMethods.buildResponseObject(updatedPatientEntity,
                         MessageConstant.SUCCESSFULLY_UPDATED,
                         HttpStatus.OK);
-            } else {
-                responseObject = UtilityMethods.buildResponseObject(patientEntity,
-                        "MessageConstant.PERIPHERAL_CROSS_BOUNDARY",
-                        HttpStatus.BAD_REQUEST);
-            }
-
         } catch (Exception ex) {
             log.error("updatePatient method got exception ->", ex);
             responseObject = UtilityMethods.buildResponseObject(null,
@@ -92,12 +74,12 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public ResponseObject getPatientById(UUID id) {
-        Optional<PatientEntity> gatewayEntity;
+        Optional<PatientEntity> patientEntity;
         ResponseObject responseObject;
         try {
-            gatewayEntity = this.personRepository.findById(id);
-            if (gatewayEntity.isPresent()) {
-                responseObject = UtilityMethods.buildResponseObject(gatewayEntity,
+            patientEntity = this.personRepository.findById(id);
+            if (patientEntity.isPresent()) {
+                responseObject = UtilityMethods.buildResponseObject(patientEntity,
                         MessageConstant.SUCCESSFULLY_GET_BY_ID,
                         HttpStatus.OK);
             } else {
@@ -118,13 +100,13 @@ public class PatientServiceImpl implements PatientService {
     public ResponseObject getAllPatientInfo() {
         ResponseObject responseObject;
         try {
-            List<PatientEntity> gatewayEntities = this.personRepository.findAll();
-            responseObject = UtilityMethods.buildResponseObject(gatewayEntities,
+            List<PatientEntity> patientEntities = this.personRepository.findAll();
+            responseObject = UtilityMethods.buildResponseObject(patientEntities,
                     MessageConstant.SUCCESSFULLY_GET_ALL,
                     HttpStatus.OK);
 
         } catch (Exception ex) {
-            log.error("getAllTodo method got exception ->", ex);
+            log.error("getAllPatientInfo method got exception ->", ex);
             responseObject = UtilityMethods.buildResponseObject(null,
                     MessageConstant.FAILED_TO_GET_ALL,
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -148,15 +130,5 @@ public class PatientServiceImpl implements PatientService {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return responseObject;
-    }
-
-    private boolean isPeripheralCrossBoundary(PatientEntity patientEntity) {
-        List<StudyEntity> studyEntityList;
-        studyEntityList = patientEntity.getStudyList();
-        if (studyEntityList.size() > 10) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }

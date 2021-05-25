@@ -48,10 +48,9 @@ export default class PatientEntryForm extends Component {
       studyList: this.state.studyList
     };
     
-    console.log("Data: "+ JSON.stringify(patientStudyModel));
+    console.log('Data of patient' + ': ' + JSON.stringify(patientStudyModel, null, 2));
     
-    
-    axios.post("",patientStudyModel)
+    axios.post("http://localhost:3000/api/patient-info/create",patientStudyModel)
        .then(response=>{
          if(response.data !=null){
             this.setState({"show":true})

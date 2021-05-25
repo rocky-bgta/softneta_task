@@ -35,35 +35,35 @@ public class PatientController {
 	}
 	
 	@PostMapping("create")
-    public ResponseObject createGateway(@Valid @RequestBody PatientEntity gatewayEntity){
+    public ResponseObject createPatient(@Valid @RequestBody PatientEntity patientEntity){
         ResponseObject responseObject;
-		responseObject = this.patientService.createPatient(gatewayEntity);
+		responseObject = this.patientService.createPatient(patientEntity);
         return responseObject;
     }
 	
 	@GetMapping("get/{id}")
-	public ResponseObject getGatewayById(@PathVariable UUID id){
+	public ResponseObject getPatientById(@PathVariable UUID id){
 		ResponseObject responseObject;
 		responseObject = this.patientService.getPatientById(id);
 		return responseObject;
 	}
 	
 	@GetMapping("list")
-	public ResponseObject getAllGateway(){
+	public ResponseObject getAllPatient(){
 		ResponseObject responseObject;
 		responseObject = this.patientService.getAllPatientInfo();
 		return responseObject;
 	}
  
 	@PutMapping("update")
-	public ResponseObject updateGateway(@Valid @RequestBody PatientEntity patientEntity){
+	public ResponseObject updatePatient(@Valid @RequestBody PatientEntity patientEntity){
 		ResponseObject responseObject;
 		responseObject = this.patientService.updatePatient(patientEntity);
 		return responseObject;
 	}
 	
 	@DeleteMapping("delete/{id}")
-	public ResponseObject deleteGateway(@PathVariable UUID id){
+	public ResponseObject deletePatient(@PathVariable UUID id){
 		ResponseObject responseObject;
 		responseObject = this.patientService.deletePatientById(id);
 		return responseObject;

@@ -17,6 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -39,7 +40,7 @@ public class StudyEntity {
 	@Column(name="description", nullable = false)
 	private String description;
 	
-	@Column(name = "updateTime", nullable = false)
-	private LocalDate updateTime;
+	@Column(name = "date", nullable = false)
+	private Date date;
 	
 }
