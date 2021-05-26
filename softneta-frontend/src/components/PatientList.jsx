@@ -3,6 +3,7 @@ import {Button, ButtonGroup, Card, Table} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faEdit, faTrash,faList} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import moment from 'moment';
 
 export default class PatientList extends Component {
   constructor(props) {
@@ -58,7 +59,7 @@ export default class PatientList extends Component {
                        <td>{patientStudy.fullName}</td>
                        <td>{patientStudy.dob}</td>
                        <td>{patientStudy.studyName}</td>
-                       <td>{patientStudy.date}</td>
+                       <td>{moment(patientStudy.date).format('YYYY-MM-DD HH:mm:ss')}</td>
                        <td>
                          <ButtonGroup>
                            <Button size={"sm"} variant={"outline-primary"} style={{margin: 6}}><FontAwesomeIcon icon={faEdit}/></Button>
