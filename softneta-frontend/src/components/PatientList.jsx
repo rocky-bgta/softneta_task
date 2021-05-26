@@ -7,54 +7,62 @@ import axios from 'axios';
 export default class PatientList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      books: []
-    };
+    this.state = this.initialState;
+    
+  }
+  initialState = {
+    patientStudyList: []
   }
   
   componentDidMount() {
-    this.getBooks();
+    this.getPatientStudyList();
   }
   
-  getBooks(){
-    // axios.get("http://localhost:8080")
-    //    .then(response=>response.data)
-    //    .then((data) => {
-    //      this.setState({books: data})
-    //    })
+  getPatientStudyList(){
+    axios.get("http://localhost:3000/api/patient-info/list")
+       .then(response=> response.data)
+       .then((data)=>{
+         this.initialState.patientStudyList = data.data;
+         this.setState(this.initialState)
+       }).catch((response)=>{
+         console.log(response);
+    })
+    
   }
   
   render() {
     return (
        <Card className={'border border-dark bg-dark text-white'}>
-         <Card.Header> <FontAwesomeIcon icon={faList}/> Book List</Card.Header>
+         <Card.Header> <FontAwesomeIcon icon={faList}/> Patient Study List</Card.Header>
          <Card.Body>
            <Table striped bordered hover variant="dark">
              <thead>
              <tr>
-               <th>Title</th>
-               <th>Author</th>
-               <th>ISBN Number</th>
-               <th>Price</th>
+               <th>Person Code</th>
+               <th>Patient Name</th>
+               <th>DOB</th>
+               <th>Study Name</th>
+               <th>Update Time</th>
                <th>Action</th>
              </tr>
              </thead>
              <tbody>
              {
-               this.state.books.length === 0 ?
+               this.state.patientStudyList.length === 0 ?
                   <tr align="center">
-                    <td colSpan="6">No Book Available.</td>
+                    <td colSpan="6">No Patient study recorded yet.</td>
                   </tr> :
-                  this.state.books.map((book) => (
-                     <tr key={book.id}>
-                       <td>{book.title}</td>
-                       <td>{book.author}</td>
-                       <td>{book.isbnNumber}</td>
-                       <td>{book.price}</td>
+                  this.state.patientStudyList.map((patientStudy,index) => (
+                     <tr key={patientStudy.id}>
+                       <td>{patientStudy.personCode}</td>
+                       <td>{patientStudy.fullName}</td>
+                       <td>{patientStudy.dob}</td>
+                       <td>{patientStudy.studyName}</td>
+                       <td>{patientStudy.date}</td>
                        <td>
                          <ButtonGroup>
-                           <Button size={"sm"} variant={"outline-primary"}></Button> <FontAwesomeIcon icon={faEdit}/>
-                           <Button size={"sm"} variant={"outline-danger"}></Button> <FontAwesomeIcon icon={faTrash}/>/>
+                           <Button size={"sm"} variant={"outline-primary"} style={{margin: 6}}><FontAwesomeIcon icon={faEdit}/></Button>
+                           <Button size={"sm"} variant={"outline-danger"} style={{margin: 6}}><FontAwesomeIcon icon={faTrash}/></Button>
                          </ButtonGroup>
                        </td>
                      </tr>
