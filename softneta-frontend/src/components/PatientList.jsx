@@ -5,6 +5,7 @@ import {faEdit, faTrash,faList} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import moment from 'moment';
 import { ToastContainer, toast } from 'react-toastify';
+import {Link} from 'react-router-dom';
 
 export default class PatientList extends Component {
   constructor(props) {
@@ -83,7 +84,8 @@ export default class PatientList extends Component {
                          <td>{moment(patientStudy.date).format('YYYY-MM-DD HH:mm:ss')}</td>
                          <td>
                            <ButtonGroup>
-                             <Button size={"sm"} variant={"outline-primary"} style={{margin: 6}}><FontAwesomeIcon icon={faEdit}/></Button>
+                             <Link to={"edit/"+patientStudy.id} className="btn btn-sm outline-primary"> <FontAwesomeIcon icon={faEdit}/></Link> {' '}
+                             {/*<Button size={"sm"} variant={"outline-primary"} style={{margin: 6}}><FontAwesomeIcon icon={faEdit}/></Button>*/}
                              <Button size={"sm"} variant={"outline-danger"} onClick={this.deletePatientInfo.bind(this, patientStudy.id)} style={{margin: 6}}><FontAwesomeIcon icon={faTrash}/></Button>
                            </ButtonGroup>
                          </td>

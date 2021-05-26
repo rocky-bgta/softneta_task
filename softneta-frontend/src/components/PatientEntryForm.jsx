@@ -18,6 +18,7 @@ export default class PatientEntryForm extends Component {
   
   
   initialState = {
+    id:'',
     personCode: '',
     firstName: '',
     lastName: '',
@@ -65,6 +66,31 @@ export default class PatientEntryForm extends Component {
     this.resetPatientInfo();
   };
   
+  updatePatientInfo = event =>{
+    event.preventDefault();
+    const patientStudyModel = {
+      id: this.state.id,
+      personCode: this.state.personCode,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      dob: this.state.dob,
+      studyList: this.state.studyList
+    };
+  
+    //console.log('Data of patient' + ': ' + JSON.stringify(patientStudyModel, null, 2));
+  
+    axios.put("http://localhost:3000/api/patient-info/update", patientStudyModel)
+       .then(response=>{
+         if(response.data !=null){
+           this.successNotify("Patient Information update successfully");
+           setTimeout(()=>{this.patientList()},2000)
+         }else {
+           this.errorNotify("Failed to update patient");
+         }
+       })
+    this.resetPatientInfo();
+  }
+  
   addStudy =()=>{
     let studyList;
     const newStudy = {
@@ -107,6 +133,29 @@ export default class PatientEntryForm extends Component {
     this.setState(studyList);
   };
   
+  patientList = () => {
+    return this.props.history.push("/list")
+  }
+  
+  componentDidMount() {
+    const patientId = this.props.match.params.id;
+    if(patientId){
+      this.findPatientById(patientId);
+    }
+  }
+  
+  findPatientById = (patientId) => {
+    axios.get("http://localhost:3000/api/patient-info/get/"+patientId)
+       .then(response => {
+         if(response.data != null){
+           console.log('Data of patient' + ': ' + JSON.stringify(response.data.data, null, 2));
+           this.setState(response.data.data)
+         }
+       }).catch((error) => {
+      console.error("Error: " + error);
+    })
+  }
+  
   render() {
     
     const {personCode, firstName, lastName, dob} = this.state;
@@ -115,15 +164,17 @@ export default class PatientEntryForm extends Component {
        
        <div>
   
-         <ToastContainer autoClose={3000} />
+         <ToastContainer autoClose={2000} />
          
          {/*<div style={{"display":this.state.show ? "block": "none"}}>*/}
          {/*  <Notification children={{show: this.state.show, message:"PatientInfo Save Successfully"}}/>*/}
          {/*</div>*/}
          
          <Card className={'border border-dark bg-dark text-white'}>
-           <Card.Header>Add New Patient info</Card.Header>
-           <Form onReset={this.resetPatientInfo} onSubmit={this.submitPatientInfo} id="patientInfoFormId">
+           <Card.Header>
+             {this.state.id ? "Update Patient info" : "Add New Patient info"}
+           </Card.Header>
+           <Form onReset={this.resetPatientInfo} onSubmit={ this.state.id ? this.updatePatientInfo : this.submitPatientInfo} id="patientInfoFormId">
              <Card.Body>
                <Form.Row>
                  <Form.Group as={Col}>
@@ -263,11 +314,15 @@ export default class PatientEntryForm extends Component {
              </Card.Body>
              <Card.Footer style={{'textAlign': 'right'}}>
                <Button size={'sm'} variant="success" type="submit">
-                 <FontAwesomeIcon icon={faSave}/> Submit
+                 <FontAwesomeIcon icon={faSave}/> {this.state.id ? "Update" : "Save"}
                </Button>{' '}
                <Button size={'sm'} variant="info" type="reset">
                  <FontAwesomeIcon icon={faUndo}/> Reset
+               </Button>{' '}
+               <Button size={'sm'} variant="info" type="button" onClick={this.patientList.bind(this)}>
+                 <FontAwesomeIcon icon={faList}/> Patient List
                </Button>
+               
              </Card.Footer>
            </Form>
          </Card>

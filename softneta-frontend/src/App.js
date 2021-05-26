@@ -23,6 +23,7 @@ function App() {
              <Switch>
                <Route path="/" exact component={Welcome}></Route>
                <Route path="/add" exact component={PatientEntryForm}></Route>
+               <Route path="/edit/:id" exact component={PatientEntryForm}></Route>
                <Route path="/list" exact component={PatientList}></Route>
              </Switch>
            </Col>
