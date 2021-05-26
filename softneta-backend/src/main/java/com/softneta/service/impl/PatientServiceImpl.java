@@ -13,7 +13,9 @@ package com.softneta.service.impl;
 import com.softneta.constant.MessageConstant;
 import com.softneta.core.ResponseObject;
 import com.softneta.entities.PatientEntity;
-import com.softneta.repository.PersonRepository;
+import com.softneta.entities.StudyEntity;
+import com.softneta.model.PatientList;
+import com.softneta.repository.PatientRepository;
 import com.softneta.service.PatientService;
 import com.softneta.utilities.UtilityMethods;
 import lombok.extern.slf4j.Slf4j;
@@ -21,26 +23,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
 public class PatientServiceImpl implements PatientService {
 	
-    private final PersonRepository personRepository;
+    private final PatientRepository patientRepository;
 
     @Autowired
-    public PatientServiceImpl(PersonRepository personRepository) {
-        this.personRepository = personRepository;
+    public PatientServiceImpl(PatientRepository patientRepository) {
+        this.patientRepository = patientRepository;
     }
 
     @Override
     public ResponseObject createPatient(PatientEntity patientEntity) {
         ResponseObject responseObject;
         try {
-                patientEntity = this.personRepository.save(patientEntity);
+                patientEntity = this.patientRepository.save(patientEntity);
                 responseObject = UtilityMethods.buildResponseObject(patientEntity,
                         MessageConstant.SUCCESSFULLY_CREATED,
                         HttpStatus.OK);
@@ -59,7 +62,7 @@ public class PatientServiceImpl implements PatientService {
         PatientEntity updatedPatientEntity;
         ResponseObject responseObject;
         try {
-                updatedPatientEntity = this.personRepository.save(patientEntity);
+                updatedPatientEntity = this.patientRepository.save(patientEntity);
                 responseObject = UtilityMethods.buildResponseObject(updatedPatientEntity,
                         MessageConstant.SUCCESSFULLY_UPDATED,
                         HttpStatus.OK);
@@ -77,7 +80,7 @@ public class PatientServiceImpl implements PatientService {
         Optional<PatientEntity> patientEntity;
         ResponseObject responseObject;
         try {
-            patientEntity = this.personRepository.findById(id);
+            patientEntity = this.patientRepository.findById(id);
             if (patientEntity.isPresent()) {
                 responseObject = UtilityMethods.buildResponseObject(patientEntity,
                         MessageConstant.SUCCESSFULLY_GET_BY_ID,
@@ -95,13 +98,33 @@ public class PatientServiceImpl implements PatientService {
         }
         return responseObject;
     }
-
+	
     @Override
     public ResponseObject getAllPatientInfo() {
         ResponseObject responseObject;
+        List<PatientList> unsortedPatientList = new ArrayList<>();
+        List<PatientList> sortedPatientList;
         try {
-            List<PatientEntity> patientEntities = this.personRepository.findAll();
-            responseObject = UtilityMethods.buildResponseObject(patientEntities,
+            List<PatientEntity> patientEntities = this.patientRepository.findAll();
+
+	        for (PatientEntity item: patientEntities) {
+		        for (StudyEntity study: item.getStudyList()) {
+			        PatientList patient = new PatientList();
+			        patient.setId(item.getId());
+			        patient.setFullName(item.getFirstName()+" "+ item.getLastName());
+			        patient.setPersonCode(item.getPersonCode());
+			        patient.setStudyName(study.getName());
+			        patient.setDob(item.getDob());
+			        patient.setDate(study.getDate());
+			        unsortedPatientList.add(patient);
+		        }
+	        }
+	        
+	        sortedPatientList = unsortedPatientList.stream()
+		                                        .sorted(Comparator.comparing(PatientList::getDate).reversed())
+		                                        .collect(Collectors.toList());
+	        
+            responseObject = UtilityMethods.buildResponseObject(sortedPatientList,
                     MessageConstant.SUCCESSFULLY_GET_ALL,
                     HttpStatus.OK);
 
@@ -119,7 +142,7 @@ public class PatientServiceImpl implements PatientService {
     public ResponseObject deletePatientById(UUID id) {
         ResponseObject responseObject;
         try {
-            this.personRepository.deleteById(id);
+            this.patientRepository.deleteById(id);
             responseObject = UtilityMethods.buildResponseObject(null,
                     MessageConstant.SUCCESSFULLY_DELETE,
                     HttpStatus.OK);
