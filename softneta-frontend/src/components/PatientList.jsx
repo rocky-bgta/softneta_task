@@ -31,8 +31,8 @@ export default class PatientList extends Component {
        .then((data)=>{
          this.initialState.patientStudyList = data.data;
          this.setState(this.initialState)
-       }).catch((response)=>{
-         console.log(response);
+       }).catch(()=>{
+      this.errorNotify("Something went wrong");
     })
   }
   
@@ -57,15 +57,17 @@ export default class PatientList extends Component {
   deletePatient = (id)=>{
     axios.delete("http://localhost:3000/api/patient-info/delete/"+id)
        .then(response=> {
-         if(response.data!=null){
-           this.successNotify("Delete Patient successfully");
+         if(response.data.data!=null){
+           this.successNotify(response.data.message);
            this.setState({
              patientStudyList: this.state.patientStudyList.filter(patient => patient.id !== id)
            })
          }else {
-           this.errorNotify("Failed to delete patient");
+           this.errorNotify(response.data.message);
          }
-       })
+       }).catch(()=>{
+      this.errorNotify("Something went wrong");
+    })
   }
   
   addPatientInfo = () =>{

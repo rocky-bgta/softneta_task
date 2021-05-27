@@ -151,7 +151,7 @@ public class PatientServiceImpl implements PatientService {
         ResponseObject responseObject;
         try {
             this.patientRepository.deleteById(id);
-            responseObject = UtilityMethods.buildResponseObject(null,
+            responseObject = UtilityMethods.buildResponseObject(id,
                     MessageConstant.SUCCESSFULLY_DELETE,
                     HttpStatus.OK);
         } catch (Exception ex) {
