@@ -1,11 +1,10 @@
 import {Component} from 'react';
 import {Button, ButtonGroup, Card, Table} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faEdit, faTrash,faList} from '@fortawesome/free-solid-svg-icons';
+import {faEdit, faTrash, faList} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import moment from 'moment';
 import { ToastContainer, toast } from 'react-toastify';
-import {Link} from 'react-router-dom';
 
 export default class PatientList extends Component {
   constructor(props) {
@@ -49,6 +48,14 @@ export default class PatientList extends Component {
        })
   }
   
+  addPatientInfo = () =>{
+    return this.props.history.push("/add")
+  }
+  
+  editPatientInfo = (patientId) =>{
+    return this.props.history.push("/edit/"+patientId)
+  }
+  
   
   
   render() {
@@ -56,7 +63,21 @@ export default class PatientList extends Component {
        <div>
          <ToastContainer autoClose={2000} />
          <Card className={'border border-dark bg-dark text-white'}>
-           <Card.Header> <FontAwesomeIcon icon={faList}/> Patient Study List</Card.Header>
+           <Card.Header>
+                   <FontAwesomeIcon icon={faList}/> Patient Study List
+             
+               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                 <Button size={'sm'}
+                         variant={'outline-primary'}
+                         onClick={this.addPatientInfo.bind(this)}
+                         style={{margin: 6}}>
+                   Add Patient Info
+                 </Button>
+  
+               </div>
+              
+            
+           </Card.Header>
            <Card.Body>
              <Table striped bordered hover variant="dark">
                <thead>
@@ -84,8 +105,7 @@ export default class PatientList extends Component {
                          <td>{moment(patientStudy.date).format('YYYY-MM-DD HH:mm:ss')}</td>
                          <td>
                            <ButtonGroup>
-                             <Link to={"edit/"+patientStudy.id} className="btn btn-sm outline-primary"> <FontAwesomeIcon icon={faEdit}/></Link> {' '}
-                             {/*<Button size={"sm"} variant={"outline-primary"} style={{margin: 6}}><FontAwesomeIcon icon={faEdit}/></Button>*/}
+                             <Button size={"sm"} variant={"outline-primary"} style={{margin: 6}} onClick={this.editPatientInfo.bind(this, patientStudy.id)}><FontAwesomeIcon icon={faEdit}/></Button>
                              <Button size={"sm"} variant={"outline-danger"} onClick={this.deletePatientInfo.bind(this, patientStudy.id)} style={{margin: 6}}><FontAwesomeIcon icon={faTrash}/></Button>
                            </ButtonGroup>
                          </td>

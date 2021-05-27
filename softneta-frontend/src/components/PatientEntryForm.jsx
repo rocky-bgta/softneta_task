@@ -1,7 +1,7 @@
 import {Component} from 'react';
 import {Button, ButtonGroup, Card, Col, Form, Table} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSave, faPlusSquare, faUndo, faPlus, faMinus, faList} from '@fortawesome/free-solid-svg-icons';
+import {faSave, faUndo, faPlus, faMinus, faList} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import DateTimePicker from 'react-datetime-picker';
 import { ToastContainer, toast } from 'react-toastify';
@@ -53,12 +53,13 @@ export default class PatientEntryForm extends Component {
       studyList: this.state.studyList
     };
     
-    console.log('Data of patient' + ': ' + JSON.stringify(patientStudyModel, null, 2));
+    //console.log('Data of patient' + ': ' + JSON.stringify(patientStudyModel, null, 2));
     
     axios.post("http://localhost:3000/api/patient-info/create",patientStudyModel)
        .then(response=>{
          if(response.data !=null){
            this.successNotify("Patient Information save successfully");
+           setTimeout(()=>{this.patientList()},2000)
          }else {
            this.errorNotify("Failed to save patient");
          }
@@ -107,7 +108,7 @@ export default class PatientEntryForm extends Component {
   
   removeStudy =(index)=>{
     let studyList = [...this.state.studyList];
-    if(studyList.length!=1) {
+    if(studyList.length!==1) {
       studyList.splice(index,1);
       this.setState({ studyList });
     }
@@ -134,7 +135,7 @@ export default class PatientEntryForm extends Component {
   };
   
   patientList = () => {
-    return this.props.history.push("/list")
+    return this.props.history.push("/")
   }
   
   componentDidMount() {
@@ -148,7 +149,7 @@ export default class PatientEntryForm extends Component {
     axios.get("http://localhost:3000/api/patient-info/get/"+patientId)
        .then(response => {
          if(response.data != null){
-           console.log('Data of patient' + ': ' + JSON.stringify(response.data.data, null, 2));
+           //console.log('Data of patient' + ': ' + JSON.stringify(response.data.data, null, 2));
            this.setState(response.data.data)
          }
        }).catch((error) => {
@@ -166,10 +167,6 @@ export default class PatientEntryForm extends Component {
   
          <ToastContainer autoClose={2000} />
          
-         {/*<div style={{"display":this.state.show ? "block": "none"}}>*/}
-         {/*  <Notification children={{show: this.state.show, message:"PatientInfo Save Successfully"}}/>*/}
-         {/*</div>*/}
-         
          <Card className={'border border-dark bg-dark text-white'}>
            <Card.Header>
              {this.state.id ? "Update Patient info" : "Add New Patient info"}
@@ -178,7 +175,7 @@ export default class PatientEntryForm extends Component {
              <Card.Body>
                <Form.Row>
                  <Form.Group as={Col}>
-                   <Form.Label>Person</Form.Label>
+                   <Form.Label>Person Code</Form.Label>
                    <Form.Control
                       type="text"
                       maxLength="30"
@@ -201,7 +198,7 @@ export default class PatientEntryForm extends Component {
                       required
                       onChange={this.handlePatientInfoChange}
                       className={'bg-dark text-white'}
-                      placeholder="Enter Author Name"/>
+                      placeholder="Enter First Name"/>
                  </Form.Group>
                  <Form.Group as={Col}>
                    <Form.Label>Last Name</Form.Label>
@@ -230,10 +227,10 @@ export default class PatientEntryForm extends Component {
                  </Form.Group>
                </Form.Row>
                {
-                 <Card className={'border border-dark bg-dark text-white'}>
+                 <Card className={'border border-dark bg-info text-white'}>
                    <Card.Header> <FontAwesomeIcon icon={faList}/> Study info</Card.Header>
                    <Card.Body>
-                     <Table striped bordered hover variant="dark">
+                     <Table striped bordered hover variant="info">
                        <thead>
                        <tr>
                          <th>Name</th>
@@ -254,7 +251,7 @@ export default class PatientEntryForm extends Component {
                                    value={study.name}
                                    onChange={e => this.handleInputStudyChange(e, index)}
                                    required
-                                   className={'bg-dark text-white'}
+                                   className={'info text-black'}
                                    placeholder="Enter Study Name"/>
                               </td>
                               <td>
@@ -267,35 +264,21 @@ export default class PatientEntryForm extends Component {
                                  value={study.description}
                                  onChange={e => this.handleInputStudyChange(e, index)}
                                  required
-                                 className={'bg-dark text-white'}
+                                 className={'info text-black'}
                                  placeholder="Enter Study Description"/></td>
                               <td>
-                                {/*<DateTimePicker*/}
-                                {/*   onChange={(dob)=> this.handleDateChange(dob)}*/}
-                                {/*   value={dob}*/}
-                                {/*/>*/}
-  
                                 <DateTimePicker
                                    required
+                                   className={'info'}
                                    onChange={e => this.handleDateChange(e, index)}
                                    value={study.date}
                                 />
-                                
-                                {/*<Form.Control*/}
-                                {/*   type="date"*/}
-                                {/*   name="date"*/}
-                                {/*   autoComplete="off"*/}
-                                {/*   value={study.date}*/}
-                                {/*   onChange={e => this.handleInputStudyChange(e, index)}*/}
-                                {/*   required*/}
-                                {/*   className={'bg-dark text-white'}*/}
-                                {/*   placeholder="Enter Study date"/>*/}
                               </td>
                               <td>
                                 <ButtonGroup>
                                   <Button size={'sm'} variant={'outline-primary'} onClick={this.addStudy} style={{margin: 6}}>
                                     <FontAwesomeIcon icon={faPlus}/>
-                                    </Button>
+                                  </Button>
                                   
                                   <Button size={'sm'} variant={'outline-danger'} onClick={()=>this.removeStudy(index)} style={{margin: 6}}>
                                     <FontAwesomeIcon icon={faMinus}/>
@@ -322,7 +305,6 @@ export default class PatientEntryForm extends Component {
                <Button size={'sm'} variant="info" type="button" onClick={this.patientList.bind(this)}>
                  <FontAwesomeIcon icon={faList}/> Patient List
                </Button>
-               
              </Card.Footer>
            </Form>
          </Card>
