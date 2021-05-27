@@ -76,8 +76,7 @@ public class PatientControllerTest {
         assertThat(outputInJson).isEqualTo(inputInJson);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-
-
+    
     @Test
     public void testUpdatePatientInfo() throws Exception{
 	    PatientEntity mockPatient = new PatientEntity();
