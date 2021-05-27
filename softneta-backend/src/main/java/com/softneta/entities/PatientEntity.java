@@ -16,8 +16,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,7 +47,7 @@ public class PatientEntity {
 	private String lastName;
 	
 	@Column(name = "dob", nullable = false)
-	private LocalDate dob;
+	private Date dob;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "p_fk", referencedColumnName = "id")

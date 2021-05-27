@@ -116,7 +116,7 @@ export default class PatientList extends Component {
                        <tr key={index}>
                          <td>{patientStudy.personCode}</td>
                          <td>{patientStudy.fullName}</td>
-                         <td>{patientStudy.dob}</td>
+                         <td>{moment(patientStudy.dob).format('YYYY-MM-DD')}</td>
                          <td>{patientStudy.studyName}</td>
                          <td>{moment(patientStudy.date).format('YYYY-MM-DD HH:mm:ss')}</td>
                          <td>
