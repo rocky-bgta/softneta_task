@@ -95,7 +95,7 @@ export default class PatientList extends Component {
              </div>
            </Card.Header>
            <Card.Body>
-             <Table striped bordered hover variant="dark">
+             <Table striped bordered hover variant="dark" className={'table-responsive-lg'}>
                <thead>
                <tr>
                  <th>Person Code</th>
