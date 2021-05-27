@@ -87,7 +87,7 @@ export default class PatientList extends Component {
              <FontAwesomeIcon icon={faList}/> Patient Study List
              <div style={{display: 'flex', justifyContent: 'flex-end'}}>
                <Button size={'sm'}
-                       variant={'outline-primary'}
+                       variant={'primary'}
                        onClick={this.addPatientInfo.bind(this)}
                        style={{margin: 6}}>
                  Add Patient Info
