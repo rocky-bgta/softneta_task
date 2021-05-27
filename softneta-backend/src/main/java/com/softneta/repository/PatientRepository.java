@@ -17,4 +17,5 @@ import java.util.UUID;
 
 @Repository
 public interface PatientRepository extends JpaRepository<PatientEntity, UUID> {
+	PatientEntity getPatientEntityByPersonCode(String personCode);
 }

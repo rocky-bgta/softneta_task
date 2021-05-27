@@ -16,7 +16,6 @@ export default class PatientEntryForm extends Component {
     this.submitPatientInfo = this.submitPatientInfo.bind(this);
   }
   
-  
   initialState = {
     id:'',
     personCode: '',
@@ -29,6 +28,7 @@ export default class PatientEntryForm extends Component {
       date: new Date(),
     }]
   }
+  
   resetPatientInfo = () => {
     let studyList = [{
       name: '',
@@ -41,7 +41,6 @@ export default class PatientEntryForm extends Component {
   
   successNotify = (message) => toast.success(message);
   errorNotify = (message) => toast.error(message);
-  
   
   submitPatientInfo = event => {
     event.preventDefault();
@@ -57,14 +56,17 @@ export default class PatientEntryForm extends Component {
     
     axios.post("http://localhost:3000/api/patient-info/create",patientStudyModel)
        .then(response=>{
-         if(response.data !=null){
-           this.successNotify("Patient Information save successfully");
+         if(response.data.data != null){
+           this.successNotify(response.data.message);
+           this.resetPatientInfo();
            setTimeout(()=>{this.patientList()},2000)
          }else {
-           this.errorNotify("Failed to save patient");
+           this.errorNotify(response.data.message);
          }
-       })
-    this.resetPatientInfo();
+       }).catch(()=>{
+      this.errorNotify("Something went wrong");
+    })
+    
   };
   
   updatePatientInfo = event =>{
@@ -82,14 +84,16 @@ export default class PatientEntryForm extends Component {
   
     axios.put("http://localhost:3000/api/patient-info/update", patientStudyModel)
        .then(response=>{
-         if(response.data !=null){
-           this.successNotify("Patient Information update successfully");
+         if(response.data.data != null){
+           this.successNotify(response.data.message);
            setTimeout(()=>{this.patientList()},2000)
          }else {
-           this.errorNotify("Failed to update patient");
+           this.errorNotify(response.data.message);
          }
-       })
-    this.resetPatientInfo();
+       }).catch(()=>{
+         this.errorNotify("Something went wrong");
+    })
+   
   }
   
   addStudy =()=>{
@@ -101,9 +105,7 @@ export default class PatientEntryForm extends Component {
     }
     studyList = this.state.studyList;
     studyList.push(newStudy);
-    
     this.setState({studyList: studyList})
-    console.log(studyList);
   }
   
   removeStudy =(index)=>{
@@ -121,7 +123,6 @@ export default class PatientEntryForm extends Component {
   };
   
   handleDateChange(date, index){
-    console.log(index);
     const studyList = [...this.state.studyList];
     studyList[index]['date'] = date;
     this.setState(studyList);
@@ -148,12 +149,11 @@ export default class PatientEntryForm extends Component {
   findPatientById = (patientId) => {
     axios.get("http://localhost:3000/api/patient-info/get/"+patientId)
        .then(response => {
-         if(response.data != null){
-           //console.log('Data of patient' + ': ' + JSON.stringify(response.data.data, null, 2));
+         if(response.data.data != null){
            this.setState(response.data.data)
          }
-       }).catch((error) => {
-      console.error("Error: " + error);
+       }).catch(() => {
+      this.errorNotify("Something went wrong");
     })
   }
   

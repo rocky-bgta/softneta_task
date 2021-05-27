@@ -24,9 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -42,12 +40,22 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public ResponseObject createPatient(PatientEntity patientEntity) {
         ResponseObject responseObject;
+        String personCode;
+        PatientEntity existingPatient;
         try {
-                patientEntity = this.patientRepository.save(patientEntity);
-                responseObject = UtilityMethods.buildResponseObject(patientEntity,
-                        MessageConstant.SUCCESSFULLY_CREATED,
-                        HttpStatus.OK);
-                
+        	    personCode = patientEntity.getPersonCode();
+        	    existingPatient = this.patientRepository.getPatientEntityByPersonCode(personCode);
+        	    if(existingPatient==null) {
+		            patientEntity = this.patientRepository.save(patientEntity);
+		            responseObject = UtilityMethods.buildResponseObject(patientEntity,
+			            MessageConstant.SUCCESSFULLY_CREATED,
+			            HttpStatus.OK);
+	            }else {
+		            responseObject = UtilityMethods.buildResponseObject(null,
+			            MessageConstant.DUPLICATE_ENTITY,
+			            HttpStatus.ALREADY_REPORTED);
+	            }
+             
         } catch (Exception ex) {
             log.error("createPatient method got exception ->", ex);
             responseObject = UtilityMethods.buildResponseObject(null,

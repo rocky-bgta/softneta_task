@@ -15,6 +15,7 @@ public class MessageConstant {
 	public static final String SUCCESSFULLY_GET_BY_ID = "Successfully get Patient information by provided id";
 	public static final String SUCCESSFULLY_GET_ALL = "Successfully get All Patient information";
 	public static final String SUCCESSFULLY_DELETE = "Successfully Delete Patient information";
+	public static final String DUPLICATE_ENTITY = "Please provide unique Person code";
 	
 	public static final String REQUESTED_INFO_DOES_NOT_EXIST_NOW = "Requested Patient doesn't exist now";
 	
