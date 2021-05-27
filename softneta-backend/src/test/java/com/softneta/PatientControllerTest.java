@@ -165,7 +165,7 @@ public class PatientControllerTest {
     }
 
     @Test
-    public void testGetGatewayById() throws Exception {
+    public void testGetPatientById() throws Exception {
 	    PatientEntity mockPatient = new PatientEntity();
 	    UUID uuid = UUID.randomUUID();
 	    mockPatient.setId(uuid);
@@ -201,7 +201,7 @@ public class PatientControllerTest {
     }
 
     @Test
-    public void testDeleteGatewayById() throws Exception {
+    public void testDeletePatientById() throws Exception {
 
         ResponseObject responseObject =  UtilityMethods.buildResponseObject(null,
                 MessageConstant.SUCCESSFULLY_DELETE,
