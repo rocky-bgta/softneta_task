@@ -6,6 +6,7 @@ import axios from 'axios';
 import DateTimePicker from 'react-datetime-picker';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '../../src/calendar.css'
 
 export default class PatientEntryForm extends Component {
   
@@ -147,10 +148,15 @@ export default class PatientEntryForm extends Component {
   }
   
   findPatientById = (patientId) => {
+    let responseData;
     axios.get("http://localhost:3000/api/patient-info/get/"+patientId)
        .then(response => {
          if(response.data.data != null){
-           this.setState(response.data.data)
+           responseData = response.data.data;
+           for(let index in responseData.studyList){
+             responseData.studyList[index].date = new Date(responseData.studyList[index].date)
+           }
+           this.setState(responseData)
          }
        }).catch(() => {
       this.errorNotify("Something went wrong");
@@ -230,7 +236,7 @@ export default class PatientEntryForm extends Component {
                  <Card className={'border border-dark bg-info text-white'}>
                    <Card.Header> <FontAwesomeIcon icon={faList}/> Study info</Card.Header>
                    <Card.Body>
-                     <Table striped bordered hover variant="info">
+                     <Table striped bordered hover variant="info" className={'table-responsive-lg'}>
                        <thead>
                        <tr>
                          <th>Name</th>
@@ -266,10 +272,10 @@ export default class PatientEntryForm extends Component {
                                  required
                                  className={'info text-black'}
                                  placeholder="Enter Study Description"/></td>
-                              <td>
+                              <td className={'table-responsive-lg'}>
                                 <DateTimePicker
                                    required
-                                   className={'info'}
+                                   className={'info react-calendar'}
                                    onChange={e => this.handleDateChange(e, index)}
                                    value={study.date}
                                 />
