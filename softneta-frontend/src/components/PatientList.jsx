@@ -5,6 +5,8 @@ import {faEdit, faTrash, faList} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import moment from 'moment';
 import { ToastContainer, toast } from 'react-toastify';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default class PatientList extends Component {
   constructor(props) {
@@ -35,12 +37,30 @@ export default class PatientList extends Component {
   }
   
   deletePatientInfo = (patientId) => {
-    axios.delete("http://localhost:3000/api/patient-info/delete/"+patientId)
+    confirmAlert({
+      title: 'Delete Patient Info',
+      message: 'Are you sure to do this.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => {
+            this.deletePatient(patientId)
+          }
+        },
+        {
+          label: 'No',
+        }
+      ]
+    });
+  }
+  
+  deletePatient = (id)=>{
+    axios.delete("http://localhost:3000/api/patient-info/delete/"+id)
        .then(response=> {
          if(response.data!=null){
            this.successNotify("Delete Patient successfully");
            this.setState({
-             patientStudyList: this.state.patientStudyList.filter(patient => patient.id !== patientId)
+             patientStudyList: this.state.patientStudyList.filter(patient => patient.id !== id)
            })
          }else {
            this.errorNotify("Failed to delete patient");
@@ -56,27 +76,21 @@ export default class PatientList extends Component {
     return this.props.history.push("/edit/"+patientId)
   }
   
-  
-  
   render() {
     return (
        <div>
          <ToastContainer autoClose={2000} />
          <Card className={'border border-dark bg-dark text-white'}>
            <Card.Header>
-                   <FontAwesomeIcon icon={faList}/> Patient Study List
-             
-               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                 <Button size={'sm'}
-                         variant={'outline-primary'}
-                         onClick={this.addPatientInfo.bind(this)}
-                         style={{margin: 6}}>
-                   Add Patient Info
-                 </Button>
-  
-               </div>
-              
-            
+             <FontAwesomeIcon icon={faList}/> Patient Study List
+             <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+               <Button size={'sm'}
+                       variant={'outline-primary'}
+                       onClick={this.addPatientInfo.bind(this)}
+                       style={{margin: 6}}>
+                 Add Patient Info
+               </Button>
+             </div>
            </Card.Header>
            <Card.Body>
              <Table striped bordered hover variant="dark">
