@@ -7,6 +7,7 @@ import DateTimePicker from 'react-datetime-picker';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../src/calendar.css'
+import moment from 'moment';
 
 export default class PatientEntryForm extends Component {
   
@@ -153,14 +154,20 @@ export default class PatientEntryForm extends Component {
        .then(response => {
          if(response.data.data != null){
            responseData = response.data.data;
-           for(let index in responseData.studyList){
-             responseData.studyList[index].date = new Date(responseData.studyList[index].date)
-           }
+           responseData = this.reformatDate(responseData);
            this.setState(responseData)
          }
        }).catch(() => {
       this.errorNotify("Something went wrong");
     })
+  }
+  
+  reformatDate(responseData){
+    for(let index in responseData.studyList){
+      responseData.studyList[index].date = new Date(responseData.studyList[index].date)
+    }
+    responseData.dob = moment(responseData.dob).format('YYYY-MM-DD');
+    return responseData;
   }
   
   render() {
