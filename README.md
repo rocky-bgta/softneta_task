@@ -29,3 +29,7 @@
 
 #####To explore front-end open the following link in browser
 http://localhost:4200/
+
+Project Demo:
+![Sofneta_task_demo](https://user-images.githubusercontent.com/13806358/119895135-40821f80-bf5f-11eb-95f0-4f4c5971a8d3.gif)
+
