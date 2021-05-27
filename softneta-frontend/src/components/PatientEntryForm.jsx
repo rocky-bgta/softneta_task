@@ -45,9 +45,9 @@ export default class PatientEntryForm extends Component {
   submitPatientInfo = event => {
     event.preventDefault();
     const patientStudyModel = {
-      personCode: this.state.personCode,
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
+      personCode: this.state.personCode.trim(),
+      firstName: this.state.firstName.trim(),
+      lastName: this.state.lastName.trim(),
       dob: this.state.dob,
       studyList: this.state.studyList
     };
@@ -73,9 +73,9 @@ export default class PatientEntryForm extends Component {
     event.preventDefault();
     const patientStudyModel = {
       id: this.state.id,
-      personCode: this.state.personCode,
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
+      personCode: this.state.personCode.trim(),
+      firstName: this.state.firstName.trim(),
+      lastName: this.state.lastName.trim(),
       dob: this.state.dob,
       studyList: this.state.studyList
     };
